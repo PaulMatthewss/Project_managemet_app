@@ -3,6 +3,8 @@
     <style name="Base.Theme.Project_management_app" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@color/Qing_Dynasty_Dragon</item>
+        <item name="colorSecondary">@color/Punch_Out_Glove</item>
     </style>
 
     <style name="Theme.Project_management_app" parent="Base.Theme.Project_management_app" />

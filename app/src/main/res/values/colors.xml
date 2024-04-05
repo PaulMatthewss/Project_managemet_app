@@ -2,4 +2,9 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="Qing_Dynasty_Dragon">#3D58F2</color>
+    <color name="Blue_Heath_Butterfly">#526AF2</color>
+    <color name="Punch_Out_Glove">#7285F2</color>
+    <color name="Cold_Lips">#99A6F2</color>
+    <color name="Bright_Grey">#ECEBF2</color>
 </resources>
