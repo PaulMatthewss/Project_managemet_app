@@ -27,6 +27,9 @@ public class Stage extends BaseObservable{
     public Stage() {}
 
     @Bindable
+    public int getStageID() { return stageID; }
+
+    @Bindable
     public String getStageName() { return stageName; }
     public void setStageName(String stageName) {
         this.stageName = stageName;

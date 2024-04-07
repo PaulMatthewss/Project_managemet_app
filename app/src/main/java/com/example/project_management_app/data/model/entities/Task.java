@@ -1,9 +1,13 @@
 package com.example.project_management_app.data.model.entities;
 
+import androidx.databinding.BaseObservable;
+import androidx.databinding.Bindable;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
+
+import com.example.project_management_app.BR;
 
 @Entity(tableName = "Tasks",
         foreignKeys = {
@@ -16,7 +20,7 @@ import androidx.room.PrimaryKey;
                         childColumns = "GradeID",
                         onDelete = ForeignKey.CASCADE)
         })
-public class Task {
+public class Task extends BaseObservable {
     @PrimaryKey(autoGenerate = true)
     public int taskID;
     @ColumnInfo(index = true)
@@ -40,5 +44,64 @@ public class Task {
         this.note = note;
         this.startDate = startDate;
         this.endDate = endDate;
+    }
+
+    @Bindable
+    public int getTaskID() { return taskID; }
+
+    @Bindable
+    public int getStudentProjectID() { return studentProjectID; }
+    public void setStudentProjectID(int studentProjectID) {
+        this.studentProjectID = studentProjectID;
+        notifyPropertyChanged(BR.studentProjectID);
+    }
+
+    @Bindable
+    public int getGradeID() { return gradeID; }
+    public void setGradeID(int gradeID) {
+        this.gradeID = gradeID;
+        notifyPropertyChanged(BR.gradeID);
+    }
+
+    @Bindable
+    public String getTaskName() { return taskName; }
+    public void setTaskName(String taskName) {
+        this.taskName = taskName;
+        notifyPropertyChanged(BR.taskName);
+    }
+
+    @Bindable
+    public String getDescription() { return description; }
+    public void setDescription(String description) {
+        this.description = description;
+        notifyPropertyChanged(BR.description);
+    }
+
+    @Bindable
+    public long getStartDate() { return startDate; }
+    public void setStartDate(long startDate) {
+        this.startDate = startDate;
+        notifyPropertyChanged(BR.startDate);
+    }
+
+    @Bindable
+    public long getEndDate() { return endDate; }
+    public void setEndDate(long endDate) {
+        this.endDate = endDate;
+        notifyPropertyChanged(BR.endDate);
+    }
+
+    @Bindable
+    public String getStatus() { return status; }
+    public void setStatus(String status) {
+        this.status = status;
+        notifyPropertyChanged(BR.status);
+    }
+
+    @Bindable
+    public String getNote() {return note;}
+    public void setNote(String note) {
+        this.note = note;
+        notifyPropertyChanged(BR.note);
     }
 }

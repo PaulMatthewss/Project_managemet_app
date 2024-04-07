@@ -46,10 +46,6 @@ public class Project extends BaseObservable {
 
     @Bindable
     public int getProjectID() { return projectID; }
-    public void setProjectID(int projectID) {
-        this.projectID = projectID;
-        notifyPropertyChanged(BR.projectID);
-    }
 
     @Bindable
     public int getUserID() { return userID; }

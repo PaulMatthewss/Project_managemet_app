@@ -18,6 +18,9 @@ public class Grade extends BaseObservable {
     }
 
     @Bindable
+    public int getGradeID() { return gradeID; }
+
+    @Bindable
     public String getGradeName() { return gradeName; }
     public void setGradeName(String gradeName) {
         this.gradeName = gradeName;
