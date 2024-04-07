@@ -13,11 +13,11 @@ import com.example.project_management_app.BR;
         foreignKeys = {
                 @ForeignKey(entity = Student.class,
                         parentColumns = "studNum",
-                        childColumns = "StudentID",
+                        childColumns = "studentID",
                         onDelete = ForeignKey.CASCADE),
                 @ForeignKey(entity = Project.class,
                         parentColumns = "projectID",
-                        childColumns = "ProjectID",
+                        childColumns = "projectID",
                         onDelete = ForeignKey.CASCADE)
         })
 public class StudentProject extends BaseObservable {

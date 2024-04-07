@@ -13,11 +13,11 @@ import com.example.project_management_app.BR;
         foreignKeys = {
                 @ForeignKey(entity = StudentProject.class,
                         parentColumns = "studentProjectID",
-                        childColumns = "StudentProjectID",
+                        childColumns = "studentProjectID",
                         onDelete = ForeignKey.CASCADE),
                 @ForeignKey(entity = Grade.class,
                         parentColumns = "gradeID",
-                        childColumns = "GradeID",
+                        childColumns = "gradeID",
                         onDelete = ForeignKey.CASCADE)
         })
 public class Task extends BaseObservable {
@@ -48,6 +48,10 @@ public class Task extends BaseObservable {
 
     @Bindable
     public int getTaskID() { return taskID; }
+    public void setTaskID(int taskID) {
+        this.taskID = taskID;
+        notifyPropertyChanged(BR.taskID);
+    }
 
     @Bindable
     public int getStudentProjectID() { return studentProjectID; }

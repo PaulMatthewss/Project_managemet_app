@@ -1,5 +1,6 @@
 package com.example.project_management_app.data.model.entities;
 
+import androidx.annotation.NonNull;
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 import androidx.room.Entity;
@@ -10,13 +11,14 @@ import com.example.project_management_app.BR;
 @Entity(tableName = "Users")
 public class User extends BaseObservable {
     @PrimaryKey
+    @NonNull
     private String login;
     private String firstName;
     private String lastName;
     private String patronymic;
     private String password;
 
-    public User(String login, String firstName, String lastName, String patronymic, String password) {
+    public User(@NonNull String login, String firstName, String lastName, String patronymic, String password) {
         this.login = login;
         this.firstName = firstName;
         this.lastName = lastName;

@@ -1,5 +1,6 @@
 package com.example.project_management_app.data.model.entities;
 
+import androidx.annotation.NonNull;
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 import androidx.room.ColumnInfo;
@@ -12,20 +13,23 @@ import com.example.project_management_app.BR;
 @Entity(tableName = "Projects",
         foreignKeys = {
             @ForeignKey(entity = User.class,
-                parentColumns = "userID",
-                childColumns = "UserID",
+                parentColumns = "login",
+                childColumns = "userID",
                 onDelete = ForeignKey.CASCADE),
             @ForeignKey(entity = Stage.class,
                 parentColumns = "stageID",
-                childColumns = "StageID",
+                childColumns = "stageID",
                 onDelete = ForeignKey.CASCADE)
         })
 public class Project extends BaseObservable {
     @PrimaryKey(autoGenerate = true)
+    @NonNull
     private int projectID;
     @ColumnInfo(index = true)
-    private int userID;
+    @NonNull
+    private String userID;
     @ColumnInfo(index = true)
+    @NonNull
     private int stageID;
     private String projectName;
     private String description;
@@ -33,7 +37,7 @@ public class Project extends BaseObservable {
     private long endDate;
     private String client;
 
-    public Project(int userID, int stageID, String projectName,
+    public Project(@NonNull String userID, int stageID, String projectName,
                    String description, long startDate, long endDate, String client) {
         this.userID = userID;
         this.stageID = stageID;
@@ -46,10 +50,14 @@ public class Project extends BaseObservable {
 
     @Bindable
     public int getProjectID() { return projectID; }
+    public void setProjectID(int projectID) {
+        this.projectID = projectID;
+        notifyPropertyChanged(BR.projectID);
+    }
 
     @Bindable
-    public int getUserID() { return userID; }
-    public void setUserID(int userID) {
+    public String getUserID() { return userID; }
+    public void setUserID(String userID) {
         this.userID = userID;
         notifyPropertyChanged(BR.userID);
     }

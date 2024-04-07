@@ -1,20 +1,29 @@
 package com.example.project_management_app.data.model.entities;
 
+import androidx.annotation.NonNull;
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
 import com.example.project_management_app.BR;
 
 @Entity(tableName = "Students")
 public class Student extends BaseObservable {
+    @PrimaryKey
+    @NonNull
     private int studNum;
+    @ColumnInfo(name = "FirstName")
     private String firstName;
+    @ColumnInfo(name = "LastName")
     private String lastName;
+    @ColumnInfo(name = "Patronymic")
     private String patronymic;
+    @ColumnInfo(name = "StudGroup")
     private String studGroup;
 
-    public Student(int studNum, String firstName, String lastName,
+    public Student(@NonNull int studNum, String firstName, String lastName,
                    String patronymic, String studGroup) {
         this.studNum = studNum;
         this.firstName = firstName;

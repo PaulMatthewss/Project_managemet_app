@@ -28,6 +28,10 @@ public class Stage extends BaseObservable{
 
     @Bindable
     public int getStageID() { return stageID; }
+    public void setStageID(int stageID) {
+        this.stageID = stageID;
+        notifyPropertyChanged(BR.stageID);
+    }
 
     @Bindable
     public String getStageName() { return stageName; }
