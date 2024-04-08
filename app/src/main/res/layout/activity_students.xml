@@ -58,14 +58,15 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/app_menu"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            app:itemIconTint="@color/primary_color"
+            app:itemTextColor="@color/primary_color"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:menu="@menu/app_menu"
-            app:itemTextColor="@color/primary_color"
-            app:itemIconTint="@color/primary_color"/>
+            app:menu="@menu/app_menu" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
