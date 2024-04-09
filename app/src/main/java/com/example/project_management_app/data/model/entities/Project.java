@@ -31,10 +31,15 @@ public class Project extends BaseObservable {
     @ColumnInfo(index = true)
     @NonNull
     private int stageID;
+    @ColumnInfo(name = "ProjectName")
     private String projectName;
+    @ColumnInfo(name = "Description")
     private String description;
+    @ColumnInfo(name = "StartDate")
     private long startDate;
+    @ColumnInfo(name = "EndDate")
     private long endDate;
+    @ColumnInfo(name = "Client")
     private String client;
 
     public Project(@NonNull String userID, int stageID, String projectName,

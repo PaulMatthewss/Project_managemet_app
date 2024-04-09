@@ -1,5 +1,6 @@
 package com.example.project_management_app.ui.login;
 
+import androidx.core.util.Consumer;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -10,14 +11,20 @@ import com.example.project_management_app.data.Result;
 import com.example.project_management_app.data.model.LoggedInUser;
 import com.example.project_management_app.R;
 
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 public class LoginViewModel extends ViewModel {
 
     private MutableLiveData<LoginFormState> loginFormState = new MutableLiveData<>();
     private MutableLiveData<LoginResult> loginResult = new MutableLiveData<>();
     private LoginRepository loginRepository;
+    private ExecutorService executorService;
 
     LoginViewModel(LoginRepository loginRepository) {
         this.loginRepository = loginRepository;
+        this.executorService = Executors.newFixedThreadPool(2);
     }
 
     LiveData<LoginFormState> getLoginFormState() {
@@ -28,22 +35,21 @@ public class LoginViewModel extends ViewModel {
         return loginResult;
     }
 
-    public boolean login(String username, String password) {
-        // can be launched in a separate asynchronous job
-        Result<LoggedInUser> result = loginRepository.login(username, password);
-
-        boolean access = false;
-
-        if (result instanceof Result.Success) {
-            LoggedInUser data = ((Result.Success<LoggedInUser>) result).getData();
-            loginResult.setValue(new LoginResult(new LoggedInUserView(data.getDisplayName())));
-            access = true;
-        } else {
-            loginResult.setValue(new LoginResult(R.string.login_failed));
-            access = false;
-        }
-        return access;
+    public void login(String username, String password, Consumer<Result<LoggedInUser>> onResult) {
+        executorService.execute(() -> {
+            loginRepository.login(username, password, result -> {
+                if (result instanceof Result.Success) {
+                    LoggedInUser data = ((Result.Success<LoggedInUser>) result).getData();
+                    loginResult.postValue(new LoginResult(new LoggedInUserView(data.getDisplayName())));
+                    onResult.accept(result); // Вызов колбэка с результатом
+                } else {
+                    loginResult.postValue(new LoginResult(R.string.login_failed));
+                    onResult.accept(result); // Вызов колбэка с результатом
+                }
+            });
+        });
     }
+
 
     public void loginDataChanged(String username, String password) {
         if (!isUserNameValid(username)) {

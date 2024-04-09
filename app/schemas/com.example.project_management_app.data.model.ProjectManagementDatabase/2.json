@@ -1,0 +1,448 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 2,
+    "identityHash": "8b2614c77a4d4bdfeb0553cc221dded2",
+    "entities": [
+      {
+        "tableName": "Stages",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`stageID` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `StageName` TEXT, `Description` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "stageID",
+            "columnName": "stageID",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "stageName",
+            "columnName": "StageName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "Description",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "stageID"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "Grades",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`gradeID` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `GradeName` TEXT)",
+        "fields": [
+          {
+            "fieldPath": "gradeID",
+            "columnName": "gradeID",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "gradeName",
+            "columnName": "GradeName",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "gradeID"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "Students",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`studNum` INTEGER NOT NULL, `FirstName` TEXT, `LastName` TEXT, `Patronymic` TEXT, `StudGroup` TEXT, PRIMARY KEY(`studNum`))",
+        "fields": [
+          {
+            "fieldPath": "studNum",
+            "columnName": "studNum",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "firstName",
+            "columnName": "FirstName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "lastName",
+            "columnName": "LastName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "patronymic",
+            "columnName": "Patronymic",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "studGroup",
+            "columnName": "StudGroup",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "studNum"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "Users",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`login` TEXT NOT NULL, `FirstName` TEXT, `LastName` TEXT, `Patronymic` TEXT, `Password` TEXT, PRIMARY KEY(`login`))",
+        "fields": [
+          {
+            "fieldPath": "login",
+            "columnName": "login",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "firstName",
+            "columnName": "FirstName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "lastName",
+            "columnName": "LastName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "patronymic",
+            "columnName": "Patronymic",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "password",
+            "columnName": "Password",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "login"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "Projects",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`projectID` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `userID` TEXT NOT NULL, `stageID` INTEGER NOT NULL, `ProjectName` TEXT, `Description` TEXT, `StartDate` INTEGER NOT NULL, `EndDate` INTEGER NOT NULL, `Client` TEXT, FOREIGN KEY(`userID`) REFERENCES `Users`(`login`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`stageID`) REFERENCES `Stages`(`stageID`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "projectID",
+            "columnName": "projectID",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "userID",
+            "columnName": "userID",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "stageID",
+            "columnName": "stageID",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "projectName",
+            "columnName": "ProjectName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "Description",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "startDate",
+            "columnName": "StartDate",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "endDate",
+            "columnName": "EndDate",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "client",
+            "columnName": "Client",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "projectID"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_Projects_userID",
+            "unique": false,
+            "columnNames": [
+              "userID"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_Projects_userID` ON `${TABLE_NAME}` (`userID`)"
+          },
+          {
+            "name": "index_Projects_stageID",
+            "unique": false,
+            "columnNames": [
+              "stageID"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_Projects_stageID` ON `${TABLE_NAME}` (`stageID`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "Users",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "userID"
+            ],
+            "referencedColumns": [
+              "login"
+            ]
+          },
+          {
+            "table": "Stages",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "stageID"
+            ],
+            "referencedColumns": [
+              "stageID"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "StudentProject",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`studentProjectID` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `studentID` INTEGER NOT NULL, `projectID` INTEGER NOT NULL, FOREIGN KEY(`studentID`) REFERENCES `Students`(`studNum`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`projectID`) REFERENCES `Projects`(`projectID`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "studentProjectID",
+            "columnName": "studentProjectID",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "studentID",
+            "columnName": "studentID",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "projectID",
+            "columnName": "projectID",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "studentProjectID"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_StudentProject_studentID",
+            "unique": false,
+            "columnNames": [
+              "studentID"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_StudentProject_studentID` ON `${TABLE_NAME}` (`studentID`)"
+          },
+          {
+            "name": "index_StudentProject_projectID",
+            "unique": false,
+            "columnNames": [
+              "projectID"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_StudentProject_projectID` ON `${TABLE_NAME}` (`projectID`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "Students",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "studentID"
+            ],
+            "referencedColumns": [
+              "studNum"
+            ]
+          },
+          {
+            "table": "Projects",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "projectID"
+            ],
+            "referencedColumns": [
+              "projectID"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "Tasks",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`taskID` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `studentProjectID` INTEGER NOT NULL, `gradeID` INTEGER NOT NULL, `TaskName` TEXT, `Description` TEXT, `Status` TEXT, `Note` TEXT, `StartDate` INTEGER NOT NULL, `EndDate` INTEGER NOT NULL, FOREIGN KEY(`studentProjectID`) REFERENCES `StudentProject`(`studentProjectID`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`gradeID`) REFERENCES `Grades`(`gradeID`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "taskID",
+            "columnName": "taskID",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "studentProjectID",
+            "columnName": "studentProjectID",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "gradeID",
+            "columnName": "gradeID",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "taskName",
+            "columnName": "TaskName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "Description",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "status",
+            "columnName": "Status",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "note",
+            "columnName": "Note",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "startDate",
+            "columnName": "StartDate",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "endDate",
+            "columnName": "EndDate",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "taskID"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_Tasks_studentProjectID",
+            "unique": false,
+            "columnNames": [
+              "studentProjectID"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_Tasks_studentProjectID` ON `${TABLE_NAME}` (`studentProjectID`)"
+          },
+          {
+            "name": "index_Tasks_gradeID",
+            "unique": false,
+            "columnNames": [
+              "gradeID"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_Tasks_gradeID` ON `${TABLE_NAME}` (`gradeID`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "StudentProject",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "studentProjectID"
+            ],
+            "referencedColumns": [
+              "studentProjectID"
+            ]
+          },
+          {
+            "table": "Grades",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "gradeID"
+            ],
+            "referencedColumns": [
+              "gradeID"
+            ]
+          }
+        ]
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '8b2614c77a4d4bdfeb0553cc221dded2')"
+    ]
+  }
+}

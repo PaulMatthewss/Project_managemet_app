@@ -27,11 +27,17 @@ public class Task extends BaseObservable {
     public int studentProjectID;
     @ColumnInfo(index = true)
     public int gradeID;
+    @ColumnInfo(name = "TaskName")
     public String taskName;
+    @ColumnInfo(name = "Description")
     public String description;
+    @ColumnInfo(name = "Status")
     public String status;
+    @ColumnInfo(name = "Note")
     public String note;
+    @ColumnInfo(name = "StartDate")
     public long startDate;
+    @ColumnInfo(name = "EndDate")
     public long endDate;
 
     public Task(int studentProjectID, int gradeID, String taskName,

@@ -14,6 +14,7 @@ import java.util.concurrent.Executors;
 public class UserRepository {
     private UserDAO userDao;
     private LiveData<List<User>> allUsers;
+    private LiveData<User> user;
     private ExecutorService executorService;
 
     // Конструктор репозитория
@@ -43,6 +44,7 @@ public class UserRepository {
     public LiveData<List<User>> getAllUsers() {
         return allUsers;
     }
+    public LiveData<User> findUserByUsername() { return user; }
 
     // Закрытие ExecutorService
     public void close() {

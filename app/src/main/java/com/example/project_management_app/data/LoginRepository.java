@@ -1,5 +1,7 @@
 package com.example.project_management_app.data;
 
+import androidx.core.util.Consumer;
+
 import com.example.project_management_app.data.model.LoggedInUser;
 
 /**
@@ -43,12 +45,14 @@ public class LoginRepository {
         // @see https://developer.android.com/training/articles/keystore
     }
 
-    public Result<LoggedInUser> login(String username, String password) {
-        // handle login
-        Result<LoggedInUser> result = dataSource.login(username, password);
-        if (result instanceof Result.Success) {
-            setLoggedInUser(((Result.Success<LoggedInUser>) result).getData());
-        }
-        return result;
+    public void login(String username, String password, Consumer<Result<LoggedInUser>> onResult) {
+        dataSource.login(username, password, result -> {
+            if (result instanceof Result.Success) {
+                setLoggedInUser(((Result.Success<LoggedInUser>) result).getData());
+                onResult.accept(result);
+            } else {
+                onResult.accept(result);
+            }
+        });
     }
 }

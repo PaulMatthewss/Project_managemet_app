@@ -2,6 +2,7 @@ package com.example.project_management_app.data.model.entities;
 
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
+import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
@@ -11,6 +12,7 @@ import com.example.project_management_app.BR;
 public class Grade extends BaseObservable {
     @PrimaryKey(autoGenerate = true)
     private int gradeID;
+    @ColumnInfo(name = "GradeName")
     private String gradeName;
 
     public Grade(String gradeName) {

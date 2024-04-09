@@ -22,23 +22,27 @@ import android.widget.Toast;
 
 import com.example.project_management_app.MainActivity;
 import com.example.project_management_app.R;
+import com.example.project_management_app.data.Result;
 import com.example.project_management_app.ui.login.LoginViewModel;
 import com.example.project_management_app.ui.login.LoginViewModelFactory;
 import com.example.project_management_app.databinding.ActivityLoginBinding;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class LoginActivity extends AppCompatActivity {
 
     private LoginViewModel loginViewModel;
     private ActivityLoginBinding binding;
-
+    private ExecutorService executorService = Executors.newFixedThreadPool(2);
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-     binding = ActivityLoginBinding.inflate(getLayoutInflater());
-     setContentView(binding.getRoot());
+        binding = ActivityLoginBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
-        loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory())
+        loginViewModel = new ViewModelProvider(this, new LoginViewModelFactory(this))
                 .get(LoginViewModel.class);
 
         final EditText usernameEditText = binding.username;
@@ -107,7 +111,17 @@ public class LoginActivity extends AppCompatActivity {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     loginViewModel.login(usernameEditText.getText().toString(),
-                            passwordEditText.getText().toString());
+                            passwordEditText.getText().toString(), result -> {
+                                runOnUiThread(() -> {
+                                    if (result instanceof Result.Success) {
+                                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                        startActivity(intent);
+                                        finish();
+                                    } else if (result instanceof Result.Error) {
+
+                                    }
+                                });
+                            });
                 }
                 return false;
             }
@@ -117,14 +131,26 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 loadingProgressBar.setVisibility(View.VISIBLE);
-                boolean access = loginViewModel.login(usernameEditText.getText().toString(),
-                        passwordEditText.getText().toString());
-                if (access){
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    startActivity(intent);
-                }
+                executorService.execute(() -> {
+                    loginViewModel.login(usernameEditText.getText().toString(),
+                            passwordEditText.getText().toString(), result -> {
+                                runOnUiThread(() -> {
+                                    loadingProgressBar.setVisibility(View.GONE);
+                                    if (result instanceof Result.Success) {
+                                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                        startActivity(intent);
+                                    }  else if (result instanceof Result.Error) {
+                                        // Обработка ошибки входа
+                                        Exception exception = ((Result.Error) result).getError();
+                                        // Отображение сообщения об ошибке пользователю, например, через Toast
+                                        Toast.makeText(LoginActivity.this, exception.getMessage(), Toast.LENGTH_LONG).show();
+                                    }
+                                });
+                            });
+                });
             }
         });
+
     }
 
     private void updateUiWithUser(LoggedInUserView model) {

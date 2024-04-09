@@ -1,6 +1,9 @@
 package com.example.project_management_app.data.model;
 
+import static com.example.project_management_app.data.PassUtils.hashPassword;
+
 import android.content.Context;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.room.Database;
@@ -13,8 +16,8 @@ import com.example.project_management_app.data.model.dao.*;
 import com.example.project_management_app.data.model.entities.*;
 
 @Database(entities = {Stage.class, Grade.class, Student.class, User.class,
-                        Project.class, StudentProject.class, Task.class},
-                        version = 1)
+        Project.class, StudentProject.class, Task.class},
+        version = 2)
 @TypeConverters({DateConverter.class})
 public abstract class ProjectManagementDatabase extends RoomDatabase {
     public abstract StudentProjectDAO studentProjectDAO();
@@ -31,8 +34,9 @@ public abstract class ProjectManagementDatabase extends RoomDatabase {
             synchronized (ProjectManagementDatabase.class) {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                            ProjectManagementDatabase.class, "project_management_database")
+                                    ProjectManagementDatabase.class, "project_management_database")
                             .fallbackToDestructiveMigration()
+                            .addCallback(roomCallback)
                             .build();
                 }
             }
@@ -50,6 +54,7 @@ public abstract class ProjectManagementDatabase extends RoomDatabase {
     };
 
     private static void InitializeData(ProjectManagementDatabase db) {
+        Log.d("init data","иницировано");
         StudentProjectDAO studentProjectDAO = db.studentProjectDAO();
         StageDAO stageDAO = db.stageDAO();
         GradeDAO gradeDAO = db.gradeDAO();
@@ -57,7 +62,5 @@ public abstract class ProjectManagementDatabase extends RoomDatabase {
         UserDAO userDAO = db.userDAO();
         ProjectDAO projectDAO = db.projectDAO();
         TaskDAO taskDAO = db.taskDAO();
-
-        userDAO.insert(new User("pupkin@mail.ru", "Вася", "Пупкин", "Илларионович", "p@ss"));
     }
 }
