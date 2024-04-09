@@ -30,6 +30,11 @@ public class AllStudentsActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
+        img_profile_btn.setOnClickListener(v -> {
+            Intent intent = new Intent(AllStudentsActivity.this, ProfileActivity.class);
+            startActivity(intent);
+        });
+
         add_student.setOnClickListener(v -> {
             Intent intent = new Intent(AllStudentsActivity.this, addStudentActivity.class);
             startActivity(intent);

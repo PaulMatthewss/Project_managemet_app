@@ -10,4 +10,6 @@
     <string name="invalid_password">Пароль должен быть >5 знаков</string>
     <string name="login_failed">"Неправильно введён пароль или почта"</string>
     <string name="add_btn">"add"</string>
+    <string name="to_delete_an_item">to delete an item</string>
+    <string name="to_edit_an_item">to edit an item</string>
 </resources>

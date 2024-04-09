@@ -41,6 +41,11 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
+        img_profile_btn.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+            startActivity(intent);
+        });
+
         add_project.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, addProjectActivity.class);
             startActivity(intent);
