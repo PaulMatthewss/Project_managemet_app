@@ -18,13 +18,12 @@ public class Stage extends BaseObservable{
     @ColumnInfo(name = "Description")
     private String description;
 
-    public Stage(String stageName, String description) {
+
+    public Stage(int stageID, String stageName, String description) {
+        this.stageID = stageID;
         this.stageName = stageName;
         this.description = description;
     }
-
-    @Ignore
-    public Stage() {}
 
     @Bindable
     public int getStageID() { return stageID; }

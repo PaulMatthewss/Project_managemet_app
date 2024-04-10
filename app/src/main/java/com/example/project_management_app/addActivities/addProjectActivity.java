@@ -5,10 +5,11 @@ import static com.example.project_management_app.data.model.DateConverter.dateTo
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -31,11 +32,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import java.util.Objects;
+
 public class addProjectActivity extends AppCompatActivity {
 
     private ActivityAddProjectBinding binding;
     private ProjectViewModel projectViewModel;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,8 +95,6 @@ public class addProjectActivity extends AppCompatActivity {
             Intent intent = new Intent(addProjectActivity.this, MainActivity.class);
             startActivity(intent);
         });
-
-
 
         /*EdgeToEdge.enable(this);
         setContentView(R.layout.activity_add_project);

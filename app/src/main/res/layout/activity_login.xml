@@ -13,6 +13,7 @@
     tools:context=".ui.login.LoginActivity">
 
     <EditText
+        android:text="pupkin@mail.ru"
         android:id="@+id/username"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -26,6 +27,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
+        android:text="password"
         android:id="@+id/password"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

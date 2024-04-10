@@ -1,6 +1,9 @@
 package com.example.project_management_app;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
@@ -13,6 +16,9 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.example.project_management_app.addActivities.addProjectActivity;
+import com.example.project_management_app.data.model.adapters.ProjectPowAdapter;
+import com.example.project_management_app.data.model.entities.Project;
+import com.example.project_management_app.data.model.viewModels.ProjectViewModel;
 import com.example.project_management_app.databinding.ActivityLoginBinding;
 import com.example.project_management_app.databinding.ActivityMainBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -21,7 +27,13 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
+    public static final String PROJECT_TO_PARSE =
+            "com.example.project_management_app.PROJECT_TO_PARSE";
     private ActivityMainBinding binding;
+    RecyclerView recyclerView_projects;
+    ProjectPowAdapter projectRowAdapter;
+    private ProjectViewModel projectViewModel;
+    public static final int ADD_PROJECT_REQUEST = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,19 +60,37 @@ public class MainActivity extends AppCompatActivity {
 
         add_project.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, addProjectActivity.class);
-            startActivity(intent);
+            startActivityForResult(intent, ADD_PROJECT_REQUEST);
         });
-
-        recyclerView.setOnClickListener(v -> {
+        /*
+        recyclerView_projects.setLayoutManager(new LinearLayoutManager(MainActivity.this));
+        recyclerView_projects.setHasFixedSize(true);
+        projectRowAdapter = new ProjectPowAdapter();
+        recyclerView_projects.setAdapter(projectRowAdapter);
+        projectViewModel = new ViewModelProvider(this).get(ProjectViewModel.class);
+        projectViewModel.getAllProjects().observe(this, projects -> projectRowAdapter.setProjects(projects));
+        projectRowAdapter.setOnItemClickListener(project -> {
             Intent intent = new Intent(MainActivity.this, StudentActivity.class);
+            intent.putExtra(PROJECT_TO_PARSE, project.getProjectID());
             startActivity(intent);
-        });
-
-        /*assert menu != null;
-        menu.setOnClickListener(v -> {
-            String text = String.valueOf(menu.getId());
-            Toast.makeText(this,text,Toast.LENGTH_LONG).show();
-            Log.i("Navbar Click",text);
         });*/
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == ADD_PROJECT_REQUEST && resultCode == RESULT_OK && data != null){
+            String name = data.getStringExtra(addProjectActivity.EXTRA_NAME);
+            String desc = data.getStringExtra(addProjectActivity.EXTRA_DESC);
+            Long start = Long.valueOf(data.getStringExtra(addProjectActivity.EXTRA_START));
+            Long end = Long.valueOf(data.getStringExtra(addProjectActivity.EXTRA_END));
+            String client = data.getStringExtra(addProjectActivity.EXTRA_CLIENT);
+            Project project = new Project("pupkin@mail.ru",1, name, desc, start, end, client);
+            projectViewModel.insert(project);
+            recreate();
+            Toast.makeText(this, "Запись добавлена", Toast.LENGTH_SHORT).show();
+        }else{
+            Toast.makeText(this, "Ошибка записи", Toast.LENGTH_SHORT).show();
+
+        }
     }
 }

@@ -27,6 +27,15 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
+                android:id="@+id/project_id"
+                android:visibility="invisible"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@+id/project_name"
+                app:layout_constraintStart_toEndOf="@+id/project_name"
+                app:layout_constraintTop_toTopOf="@+id/project_name" />
+
+            <TextView
                 android:id="@+id/project_client"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
