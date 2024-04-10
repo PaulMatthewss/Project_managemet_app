@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Стиль для DatePicker -->
+    <style name="MinimalDatePicker" parent="Theme.AppCompat.Light.Dialog">
+        <!-- Убираем фон -->
+        <item name="android:background">@android:color/transparent</item>
+        <!-- Прозрачный разделитель -->
+        <item name="android:divider">@android:color/transparent</item>
+        <!-- Цвет текста -->
+        <item name="android:textColorPrimary">@android:color/black</item>
+        <!-- Цвет выделения -->
+        <item name="colorAccent">@android:color/holo_blue_light</item>
+    </style>
+</resources>

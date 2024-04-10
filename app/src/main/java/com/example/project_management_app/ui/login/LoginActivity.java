@@ -116,7 +116,7 @@ public class LoginActivity extends AppCompatActivity {
                                     if (result instanceof Result.Success) {
                                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                         startActivity(intent);
-                                        finish();
+
                                     } else if (result instanceof Result.Error) {
 
                                     }

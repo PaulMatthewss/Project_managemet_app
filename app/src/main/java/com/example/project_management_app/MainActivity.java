@@ -1,21 +1,26 @@
 package com.example.project_management_app;
 
+import static com.example.project_management_app.data.model.DateConverter.dateToTimestamp;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.example.project_management_app.addActivities.addProjectActivity;
+import com.example.project_management_app.data.LoginDataSource;
+import com.example.project_management_app.data.LoginRepository;
+import com.example.project_management_app.data.model.LoggedInUser;
 import com.example.project_management_app.data.model.adapters.ProjectPowAdapter;
 import com.example.project_management_app.data.model.entities.Project;
 import com.example.project_management_app.data.model.viewModels.ProjectViewModel;
@@ -24,6 +29,9 @@ import com.example.project_management_app.databinding.ActivityMainBinding;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.util.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -34,19 +42,60 @@ public class MainActivity extends AppCompatActivity {
     ProjectPowAdapter projectRowAdapter;
     private ProjectViewModel projectViewModel;
     public static final int ADD_PROJECT_REQUEST = 1;
+    public static String LOGGED_IN_USER;
+
+    ActivityResultLauncher<Intent> addProjectResultLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == Activity.RESULT_OK) {
+                Intent data = result.getData();
+                if (data != null) {
+                    Project project;
+                    try {
+                        SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
+                        String dateStartString = data.getStringExtra(addProjectActivity.EXTRA_START);
+                        String dateEndString = data.getStringExtra(addProjectActivity.EXTRA_END);
+                        Date dateStart = formatter.parse(dateStartString);
+                        Date dateEnd = formatter.parse(dateEndString);
+                        String name = data.getStringExtra(addProjectActivity.EXTRA_NAME);
+                        String desc = data.getStringExtra(addProjectActivity.EXTRA_DESC);
+                        long start = dateToTimestamp(dateStart);
+                        long end = dateToTimestamp(dateEnd);
+                        String client = data.getStringExtra(addProjectActivity.EXTRA_CLIENT);
+                        project = new Project(LOGGED_IN_USER, 1, name, desc, start, end, client);
+                    } catch (ParseException e) {
+                        throw new RuntimeException(e);
+                    }
+                    projectViewModel.insert(project);
+                    recreate();
+                    Toast.makeText(this, "Запись добавлена", Toast.LENGTH_SHORT).show();
+                }
+                } else {
+                    Toast.makeText(this, "Ошибка записи", Toast.LENGTH_SHORT).show();
+                }
+            });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
         final FloatingActionButton add_project = binding.addProject;
         final RecyclerView recyclerView = binding.recyclerView;
         final ImageButton img_projects_btn = binding.projects;
         final ImageButton img_allStudents_btn = binding.allStudents;
         final ImageButton img_profile_btn = binding.profile;
-        //final BottomNavigationView menu = binding.appMenu;
 
+        LoginRepository loginRepository = LoginRepository
+                .getInstance(new LoginDataSource(getApplicationContext()));
+        final LiveData<LoggedInUser> loggedInUserLiveData = loginRepository.getLoggedInUser();
+
+        loggedInUserLiveData.observe(this, loggedInUser -> {
+            if (loggedInUser != null) {
+                LOGGED_IN_USER = loggedInUser.getUserId();
+            }
+        });
 
         img_allStudents_btn.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, AllStudentsActivity.class);
@@ -60,37 +109,20 @@ public class MainActivity extends AppCompatActivity {
 
         add_project.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, addProjectActivity.class);
-            startActivityForResult(intent, ADD_PROJECT_REQUEST);
+            addProjectResultLauncher.launch(intent);
         });
-        /*
+
+        recyclerView_projects = binding.recyclerView;
         recyclerView_projects.setLayoutManager(new LinearLayoutManager(MainActivity.this));
         recyclerView_projects.setHasFixedSize(true);
         projectRowAdapter = new ProjectPowAdapter();
         recyclerView_projects.setAdapter(projectRowAdapter);
         projectViewModel = new ViewModelProvider(this).get(ProjectViewModel.class);
-        projectViewModel.getAllProjects().observe(this, projects -> projectRowAdapter.setProjects(projects));
+        projectViewModel.getAllProjectsForUser(LOGGED_IN_USER).observe(this, projects -> projectRowAdapter.setProjects(projects));
         projectRowAdapter.setOnItemClickListener(project -> {
             Intent intent = new Intent(MainActivity.this, StudentActivity.class);
             intent.putExtra(PROJECT_TO_PARSE, project.getProjectID());
             startActivity(intent);
-        });*/
-    }
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == ADD_PROJECT_REQUEST && resultCode == RESULT_OK && data != null){
-            String name = data.getStringExtra(addProjectActivity.EXTRA_NAME);
-            String desc = data.getStringExtra(addProjectActivity.EXTRA_DESC);
-            Long start = Long.valueOf(data.getStringExtra(addProjectActivity.EXTRA_START));
-            Long end = Long.valueOf(data.getStringExtra(addProjectActivity.EXTRA_END));
-            String client = data.getStringExtra(addProjectActivity.EXTRA_CLIENT);
-            Project project = new Project("pupkin@mail.ru",1, name, desc, start, end, client);
-            projectViewModel.insert(project);
-            recreate();
-            Toast.makeText(this, "Запись добавлена", Toast.LENGTH_SHORT).show();
-        }else{
-            Toast.makeText(this, "Ошибка записи", Toast.LENGTH_SHORT).show();
-
-        }
+        });
     }
 }

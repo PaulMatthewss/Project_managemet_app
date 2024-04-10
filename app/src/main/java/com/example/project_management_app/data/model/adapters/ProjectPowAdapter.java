@@ -76,4 +76,5 @@ public class ProjectPowAdapter extends RecyclerView.Adapter<ProjectPowAdapter.My
     public void setOnItemClickListener(OnItemClickListener listener){
         this.listener = listener;
     }
+
 }

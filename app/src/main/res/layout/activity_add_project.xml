@@ -34,6 +34,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Дата начала проекта" />
+
         <EditText
             android:id="@+id/project_start"
             android:layout_width="match_parent"

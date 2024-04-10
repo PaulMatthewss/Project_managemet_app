@@ -54,7 +54,7 @@
                 app:layout_constraintEnd_toStartOf="@+id/delete_btn"
                 app:layout_constraintTop_toTopOf="@+id/delete_btn"
                 app:tint="@color/primary_color"
-                tools:src="@drawable/edit_btn_draw" />
+                android:src="@drawable/edit_btn_draw" />
 
             <ImageButton
                 android:id="@+id/delete_btn"
@@ -66,7 +66,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:tint="@color/primary_color"
-                tools:src="@drawable/delete_btn_draw" />
+                android:src="@drawable/delete_btn_draw" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>

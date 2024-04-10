@@ -16,63 +16,44 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class ProjectRepository {
-    private final ProjectDAO projectDao;
-    private final LiveData<List<Project>> allProjects;
+    private ProjectDAO projectDao;
+    private LiveData<List<Project>> Projects;
+    private ExecutorService executorService;
 
+    // Конструктор репозитория
     public ProjectRepository(Application application) {
         ProjectManagementDatabase database = ProjectManagementDatabase.getDatabase(application);
         projectDao = database.projectDAO();
-        allProjects = projectDao.getAllProjects();
+        Projects = projectDao.getAllProjects();
+        executorService = Executors.newFixedThreadPool(3); // Создаем пул из 3 потоков
     }
+
+    // Операция вставки проекта
     public void insert(Project project) {
-
+        executorService.execute(() -> projectDao.insert(project));
     }
+
+    // Операция обновления проекта
     public void update(Project project) {
-
+        executorService.execute(() -> projectDao.update(project));
     }
+
+    // Операция удаления проекта
     public void delete(Project project) {
-
+        executorService.execute(() -> projectDao.delete(project));
     }
+
+    // Получение всех проектов
     public LiveData<List<Project>> getAllProjects() {
-        return allProjects;
+        return Projects;
     }
 
-<<<<<<< HEAD
+    public LiveData<List<Project>> getAllProjectsForUser(String username) {
+        return projectDao.getAllProjectsForUser(username);
+    }
+
+    // Закрытие ExecutorService
     public void close() {
         executorService.shutdown();
-=======
-    private static class InsertProjectAsyncTask extends AsyncTask<Project, Void, Void> {
-        private final ProjectDAO projectDao;
-        private  InsertProjectAsyncTask(ProjectDAO projectDao){
-            this.projectDao = projectDao;
-        }
-        @Override
-        protected Void doInBackground(Project... projects) {
-            projectDao.insert(projects[0]);
-            return null;
-        }
-    }
-    private static class UpdateProjectAsyncTask extends AsyncTask<Project, Void, Void> {
-        private final ProjectDAO projectDao;
-        private  UpdateProjectAsyncTask(ProjectDAO projectDao){
-            this.projectDao = projectDao;
-        }
-        @Override
-        protected Void doInBackground(Project... projects) {
-            projectDao.update(projects[0]);
-            return null;
-        }
-    }
-    private static class DeleteProjectAsyncTask extends AsyncTask<Project, Void, Void> {
-        private final ProjectDAO projectDao;
-        private  DeleteProjectAsyncTask(ProjectDAO projectDao){
-            this.projectDao = projectDao;
-        }
-        @Override
-        protected Void doInBackground(Project... projects) {
-            projectDao.delete(projects[0]);
-            return null;
-        }
->>>>>>> master
     }
 }

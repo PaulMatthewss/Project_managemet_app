@@ -14,6 +14,7 @@ import java.util.List;
 public class ProjectViewModel extends AndroidViewModel {
     private final ProjectRepository projectRepository;
     private final LiveData<List<Project>> allProjects;
+    private LiveData<List<Project>> allProjectsForUser;
     public ProjectViewModel(@NonNull Application application) {
         super(application);
         projectRepository = new ProjectRepository(application);
@@ -30,5 +31,9 @@ public class ProjectViewModel extends AndroidViewModel {
     }
     public LiveData<List<Project>> getAllProjects(){
         return allProjects;
+    }
+    public LiveData<List<Project>> getAllProjectsForUser(String username) {
+        allProjectsForUser = projectRepository.getAllProjectsForUser(username);
+        return allProjectsForUser;
     }
 }

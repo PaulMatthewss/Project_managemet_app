@@ -1,50 +1,42 @@
 package com.example.project_management_app.addActivities;
 
-import static com.example.project_management_app.data.model.DateConverter.dateToTimestamp;
-
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import androidx.activity.EdgeToEdge;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.example.project_management_app.MainActivity;
-import com.example.project_management_app.ProjectViewModel;
-import com.example.project_management_app.R;
-import com.example.project_management_app.StudentActivity;
-import com.example.project_management_app.data.LoginDataSource;
-import com.example.project_management_app.data.LoginRepository;
-import com.example.project_management_app.data.model.LoggedInUser;
-import com.example.project_management_app.data.model.entities.Project;
 import com.example.project_management_app.databinding.ActivityAddProjectBinding;
-import com.example.project_management_app.data.model.DateConverter;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import java.util.Objects;
 
 public class addProjectActivity extends AppCompatActivity {
 
     private ActivityAddProjectBinding binding;
-    private ProjectViewModel projectViewModel;
+
+    public static final String EXTRA_NAME =
+            "com.example.project_management_app.EXTRA_NAME";
+    public static final String EXTRA_DESC =
+            "com.example.project_management_app.EXTRA_DESC";
+    public static final String EXTRA_START =
+            "com.example.project_management_app.EXTRA_START";
+    public static final String EXTRA_END =
+            "com.example.project_management_app.EXTRA_END";
+    public static final String EXTRA_CLIENT =
+            "com.example.project_management_app.EXTRA_CLIENT";
+    public static final String EXTRA_STAGE =
+            "com.example.project_management_app.EXTRA_STAGE";
+    public static final String EXTRA_USER =
+            "com.example.project_management_app.EXTRA_USER";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityAddProjectBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        projectViewModel = new ViewModelProvider(this).get(ProjectViewModel.class);
+//        projectViewModel = new ViewModelProvider(this).get(ProjectViewModel.class);
 
         final Button cancel_btn = binding.btnNo;
         final Button confirm_btn = binding.btnYes;
@@ -54,41 +46,44 @@ public class addProjectActivity extends AppCompatActivity {
         final EditText projectEnd = (EditText) binding.projectEnd;
         final EditText projectClient = (EditText) binding.projectClient;
 
-        LoginRepository loginRepository = LoginRepository
-                .getInstance(new LoginDataSource(getApplicationContext()));
-        final LiveData<LoggedInUser> loggedInUserLiveData = loginRepository.getLoggedInUser();
+//        LoginRepository loginRepository = LoginRepository
+//                .getInstance(new LoginDataSource(getApplicationContext()));
+//        final LiveData<LoggedInUser> loggedInUserLiveData = loginRepository.getLoggedInUser();
 
-        loggedInUserLiveData.observe(this, loggedInUser -> {
-            if (loggedInUser != null) {
-                // Пользователь авторизован, можно передать данные в ViewModel
-                confirm_btn.setOnClickListener(v -> {
-                    // Создание объекта Project
-                    SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
-                    String dateStartString = projectStart.getText().toString();
-                    String dateEndString = projectEnd.getText().toString();
-                    Date dateStart;
-                    Date dateEnd;
-                    try {
-                        dateStart = formatter.parse(dateStartString);
-                        dateEnd = formatter.parse(dateEndString);
-                    } catch (ParseException e) {
-                        throw new RuntimeException(e);
-                    }
-                    Project newProject = new Project(
-                            loggedInUser.getUserId(),
-                            1,
-                            projectName.getText().toString(),
-                            projectDescription.getText().toString(),
-                            dateToTimestamp(dateStart),
-                            dateToTimestamp(dateEnd),
-                            projectClient.getText().toString()
-                    );
+//        loggedInUserLiveData.observe(this, loggedInUser -> {
+//            if (loggedInUser != null) {
+//                // Пользователь авторизован, можно передать данные в ViewModel
+//                confirm_btn.setOnClickListener(v -> {
+//                    // Создание объекта Project
+//                    SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
+//                    String dateStartString = projectStart.getText().toString();
+//                    String dateEndString = projectEnd.getText().toString();
+//                    Date dateStart;
+//                    Date dateEnd;
+//                    try {
+//                        dateStart = formatter.parse(dateStartString);
+//                        dateEnd = formatter.parse(dateEndString);
+//                    } catch (ParseException e) {
+//                        throw new RuntimeException(e);
+//                    }
+//                    Project newProject = new Project(
+//                            loggedInUser.getUserId(),
+//                            1,
+//                            projectName.getText().toString(),
+//                            projectDescription.getText().toString(),
+//                            dateToTimestamp(dateStart),
+//                            dateToTimestamp(dateEnd),
+//                            projectClient.getText().toString()
+//                    );
+//
+//                    // Вызов метода ViewModel для добавления проекта
+//                    projectViewModel.insert(newProject);
+//                });
+//            }
+//        });
 
-                    // Вызов метода ViewModel для добавления проекта
-                    projectViewModel.insert(newProject);
-                });
-            }
-        });
+        confirm_btn.setOnClickListener(view -> saveProject(projectName, projectDescription,
+                projectStart, projectEnd, projectClient));
 
         assert cancel_btn != null;
         cancel_btn.setOnClickListener(v -> {
@@ -96,12 +91,29 @@ public class addProjectActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        /*EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_add_project);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });*/
+    }
+
+    private void saveProject(@NonNull EditText projectName, EditText projectDescription,
+                             EditText projectStart, EditText projectEnd, EditText projectClient){
+        if(projectName.getText().toString().trim().isEmpty() ||
+                projectDescription.getText().toString().trim().isEmpty() ||
+                projectStart.getText().toString().trim().isEmpty() ||
+                projectClient.getText().toString().trim().isEmpty()) {
+            Toast.makeText(this, "Пожалуйста введите данные", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        String name = projectName.getText().toString().trim();
+        String desc = projectDescription.getText().toString().trim();
+        String start = projectStart.getText().toString().trim();
+        String end = projectEnd.getText().toString().trim();
+        String client = projectClient.getText().toString().trim();
+        Intent data = new Intent();
+        data.putExtra(EXTRA_NAME, name);
+        data.putExtra(EXTRA_DESC, desc);
+        data.putExtra(EXTRA_START, start);
+        data.putExtra(EXTRA_END, end);
+        data.putExtra(EXTRA_CLIENT, client);
+        setResult(RESULT_OK, data);
+        finish();
     }
 }

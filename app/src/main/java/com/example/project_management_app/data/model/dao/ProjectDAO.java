@@ -24,4 +24,7 @@ public interface ProjectDAO {
 
     @Query("SELECT * FROM Projects")
     LiveData<List<Project>> getAllProjects();
+
+    @Query("SELECT * FROM Projects WHERE userID = :username")
+    LiveData<List<Project>> getAllProjectsForUser(String username);
 }
