@@ -16,35 +16,25 @@ public class ProjectRepository {
     private LiveData<List<Project>> allProjects;
     private ExecutorService executorService;
 
-    // Конструктор репозитория
     public ProjectRepository(Application application) {
         ProjectManagementDatabase database = ProjectManagementDatabase.getDatabase(application);
         projectDao = database.projectDAO();
         allProjects = projectDao.getAllProjects();
         executorService = Executors.newFixedThreadPool(3); // Создаем пул из 3 потоков
     }
-
-    // Операция вставки проекта
     public void insert(Project project) {
         executorService.execute(() -> projectDao.insert(project));
     }
-
-    // Операция обновления проекта
     public void update(Project project) {
         executorService.execute(() -> projectDao.update(project));
     }
-
-    // Операция удаления проекта
     public void delete(Project project) {
         executorService.execute(() -> projectDao.delete(project));
     }
-
-    // Получение всех проектов
     public LiveData<List<Project>> getAllProjects() {
         return allProjects;
     }
 
-    // Закрытие ExecutorService
     public void close() {
         executorService.shutdown();
     }

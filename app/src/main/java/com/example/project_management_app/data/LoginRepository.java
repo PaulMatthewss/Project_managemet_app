@@ -1,6 +1,8 @@
 package com.example.project_management_app.data;
 
 import androidx.core.util.Consumer;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import com.example.project_management_app.data.model.LoggedInUser;
 
@@ -11,12 +13,10 @@ import com.example.project_management_app.data.model.LoggedInUser;
 public class LoginRepository {
 
     private static volatile LoginRepository instance;
-
     private LoginDataSource dataSource;
-
-    // If user credentials will be cached in local storage, it is recommended it be encrypted
-    // @see https://developer.android.com/training/articles/keystore
     private LoggedInUser user = null;
+
+    private final MutableLiveData<LoggedInUser> loggedInUserLiveData = new MutableLiveData<>();
 
     // private constructor : singleton access
     private LoginRepository(LoginDataSource dataSource) {
@@ -39,10 +39,13 @@ public class LoginRepository {
         dataSource.logout();
     }
 
+    public LiveData<LoggedInUser> getLoggedInUser() {
+        return loggedInUserLiveData;
+    }
+
     private void setLoggedInUser(LoggedInUser user) {
         this.user = user;
-        // If user credentials will be cached in local storage, it is recommended it be encrypted
-        // @see https://developer.android.com/training/articles/keystore
+        loggedInUserLiveData.postValue(user);
     }
 
     public void login(String username, String password, Consumer<Result<LoggedInUser>> onResult) {

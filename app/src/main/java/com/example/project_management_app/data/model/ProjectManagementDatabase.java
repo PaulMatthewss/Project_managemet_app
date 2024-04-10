@@ -62,5 +62,6 @@ public abstract class ProjectManagementDatabase extends RoomDatabase {
         UserDAO userDAO = db.userDAO();
         ProjectDAO projectDAO = db.projectDAO();
         TaskDAO taskDAO = db.taskDAO();
+
     }
 }
