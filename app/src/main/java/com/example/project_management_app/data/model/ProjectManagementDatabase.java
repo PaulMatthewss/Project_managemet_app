@@ -63,5 +63,12 @@ public abstract class ProjectManagementDatabase extends RoomDatabase {
         ProjectDAO projectDAO = db.projectDAO();
         TaskDAO taskDAO = db.taskDAO();
 
+        String p = hashPassword("password");
+
+        userDAO.insert(new User("pupkin@mail.ru", "Василий", "Пупкин", "Илларионович", p));
+        stageDAO.insert(new Stage( "Проектирование БД", "Создание различных диаграмм и схемы бд"));
+        stageDAO.insert(new Stage( "Проектирование системы", "Разработка архитектуры проекта, выбор технологий и платформ"));
+        stageDAO.insert(new Stage("Разработка", "Написание кода, реализация функциональности системы"));
+        stageDAO.insert(new Stage("Тестирование", "Проверка работоспособности системы, выявление и исправление ошибок"));
     }
 }

@@ -19,8 +19,7 @@ public class Stage extends BaseObservable{
     private String description;
 
 
-    public Stage(int stageID, String stageName, String description) {
-        this.stageID = stageID;
+    public Stage(String stageName, String description) {
         this.stageName = stageName;
         this.description = description;
     }

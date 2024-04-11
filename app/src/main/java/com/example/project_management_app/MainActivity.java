@@ -59,10 +59,11 @@ public class MainActivity extends AppCompatActivity {
                         Date dateEnd = formatter.parse(dateEndString);
                         String name = data.getStringExtra(addProjectActivity.EXTRA_NAME);
                         String desc = data.getStringExtra(addProjectActivity.EXTRA_DESC);
+                        Integer stage = data.getIntExtra(addProjectActivity.EXTRA_STAGE_ID, 1);
                         long start = dateToTimestamp(dateStart);
                         long end = dateToTimestamp(dateEnd);
                         String client = data.getStringExtra(addProjectActivity.EXTRA_CLIENT);
-                        project = new Project(LOGGED_IN_USER, 1, name, desc, start, end, client);
+                        project = new Project(LOGGED_IN_USER, stage, name, desc, start, end, client);
                     } catch (ParseException e) {
                         throw new RuntimeException(e);
                     }
@@ -119,10 +120,26 @@ public class MainActivity extends AppCompatActivity {
         recyclerView_projects.setAdapter(projectRowAdapter);
         projectViewModel = new ViewModelProvider(this).get(ProjectViewModel.class);
         projectViewModel.getAllProjectsForUser(LOGGED_IN_USER).observe(this, projects -> projectRowAdapter.setProjects(projects));
-        projectRowAdapter.setOnItemClickListener(project -> {
-            Intent intent = new Intent(MainActivity.this, StudentActivity.class);
-            intent.putExtra(PROJECT_TO_PARSE, project.getProjectID());
-            startActivity(intent);
+
+        projectRowAdapter.setOnItemClickListener(new ProjectPowAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(Project project) {
+                Intent intent = new Intent(MainActivity.this, StudentActivity.class);
+                intent.putExtra(PROJECT_TO_PARSE, project.getProjectID());
+                startActivity(intent);
+            }
+
+            @Override
+            public void onEditClick(Project project) {
+                // Здесь код для обработки нажатия на кнопку редактирования
+                // Например, открыть активность редактирования с передачей ID проекта
+            }
+
+            @Override
+            public void onDeleteClick(Project project) {
+                projectViewModel.delete(project);
+            }
         });
+
     }
 }

@@ -37,6 +37,20 @@ public class ProjectPowAdapter extends RecyclerView.Adapter<ProjectPowAdapter.My
         holder.project_id.setText(String.valueOf(currentProject.getProjectID()));
         holder.project_name.setText(currentProject.getProjectName());
         holder.project_client.setText(currentProject.getClient());
+
+        holder.edit_btn.setOnClickListener(view -> {
+            // Обработка нажатия на кнопку редактирования
+            if(listener != null && position != RecyclerView.NO_POSITION){
+                listener.onEditClick(projects.get(position));
+            }
+        });
+
+        holder.delete_btn.setOnClickListener(view -> {
+            // Обработка нажатия на кнопку удаления
+            if(listener != null && position != RecyclerView.NO_POSITION){
+                listener.onDeleteClick(projects.get(position));
+            }
+        });
     }
 
     @Override
@@ -72,6 +86,8 @@ public class ProjectPowAdapter extends RecyclerView.Adapter<ProjectPowAdapter.My
     }
     public interface  OnItemClickListener{
         void onItemClick(Project project);
+        void onEditClick(Project project);
+        void onDeleteClick(Project project);
     }
     public void setOnItemClickListener(OnItemClickListener listener){
         this.listener = listener;
