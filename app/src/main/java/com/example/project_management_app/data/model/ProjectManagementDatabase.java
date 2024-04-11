@@ -69,6 +69,5 @@ public abstract class ProjectManagementDatabase extends RoomDatabase {
         stageDAO.insert(new Stage( "Проектирование БД", "Создание различных диаграмм и схемы бд"));
         stageDAO.insert(new Stage( "Проектирование системы", "Разработка архитектуры проекта, выбор технологий и платформ"));
         stageDAO.insert(new Stage("Разработка", "Написание кода, реализация функциональности системы"));
-        stageDAO.insert(new Stage("Тестирование", "Проверка работоспособности системы, выявление и исправление ошибок"));
-    }
+        stageDAO.insert(new Stage("Тестирование", "Проверка работоспособности системы, выявление и исправление ошибок"));}
 }

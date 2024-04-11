@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.project_management_app.MainActivity;
 import com.example.project_management_app.data.model.entities.Stage;
@@ -50,6 +51,8 @@ public class addProjectActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityAddProjectBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        stageViewModel = new ViewModelProvider(this).get(StageViewModel.class);
 
         final Button cancel_btn = binding.btnNo;
         final Button confirm_btn = binding.btnYes;
